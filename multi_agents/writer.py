@@ -33,6 +33,7 @@ class WriterAgent:
         task = research_state.get("task")
         follow_guidelines = task.get("follow_guidelines")
         guidelines = task.get("guidelines")
+        _date = datetime.now().strftime('%d/%m/%Y')
         # prompt = [{
         #     "role": "system",
         #     "content": "You are a research writer. Your sole purpose is to write a well-written "
@@ -40,7 +41,7 @@ class WriterAgent:
         #                "topic based on research findings and information.\n "
         # }, {
         #     "role": "user",
-        #     "content": f"Today's date is {datetime.now().strftime('%d/%m/%Y')}\n."
+        #     "content": f"Today's date is {_date}\n."
         #                f"Query or Topic: {query}\n"
         #                f"Research data: {str(data)}\n"
         #                f"Your task is to write an in depth, well written and detailed "
@@ -53,7 +54,6 @@ class WriterAgent:
         #                f"{sample_json}\n\n"
         # }]
         # response = call_model(prompt, task.get("model"), max_retries=2, response_format='json')
-        _date = datetime.now().strftime('%d/%m/%Y')
         _data = str(data)
         if follow_guidelines:
             _human = """今天的日期是 {date}。

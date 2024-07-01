@@ -33,12 +33,13 @@ class EditorAgent:
         initial_research = research_state.get("initial_research")
         task = research_state.get("task")
         max_sections = task.get("max_sections")
+        _date = datetime.now().strftime('%d/%m/%Y')
         # prompt = [{
         #     "role": "system",
         #     "content": "你是一名研究主管。你的目标是监督研究项目从开始到完成的全过程。"
         # }, {
         #     "role": "user",
-        #     "content": f"Today's date is {datetime.now().strftime('%d/%m/%Y')}\n."
+        #     "content": f"Today's date is {_date}\n."
         #                f"Research summary report: '{initial_research}'\n\n"
         #                f"Your task is to generate an outline of sections headers for the research project"
         #                f" based on the research summary report above.\n"
@@ -50,7 +51,6 @@ class EditorAgent:
         #                f"sections: ['section header 1', 'section header 2', 'section header 3' ...]}}.\n "
         # }]
         # response = call_model(prompt=prompt, model=task.get("model"), response_format="json")
-        _date = datetime.now().strftime('%d/%m/%Y')
         _human = """今天的日期是 {date}
 研究摘要报告：'{initial_research}'
 

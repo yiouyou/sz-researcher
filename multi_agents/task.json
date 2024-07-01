@@ -2,7 +2,7 @@
     "model": "qwen:32b",
     "query": "AI frees you.",
     "source": "web",
-    "verbose": false,
+    "verbose": true,
     "max_sections": 3,
     "follow_guidelines": true,
     "guidelines": [

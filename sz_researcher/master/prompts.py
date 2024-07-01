@@ -18,7 +18,8 @@ def generate_search_queries_prompt(question: str, parent_query: str, report_type
         task = f"{parent_query} - {question}"
     else:
         task = question
-    return f'编写 {max_iterations} 个谷歌搜索查询，以便从以下任务"{task}"中在线搜索形成客观意见。如果需要，使用当前日期：{datetime.now().strftime("%B %d, %Y")}。\n同时在查询中包含指定的任务细节，如地点、名称等。\n您必须以下列格式回复一个字符串列表：["查询 1", "查询 2", "查询 3"]。\n回复应仅包含该列表。'
+    _date = datetime.now().strftime("%B %d, %Y")
+    return f'编写 {max_iterations} 个谷歌搜索查询，以便从以下任务"{task}"中在线搜索形成客观意见。如果需要，使用当前日期：{_date}。\n同时在查询中包含指定的任务细节，如地点、名称等。\n您必须以下列格式回复一个字符串列表：["查询 1", "查询 2", "查询 3"]。\n回复应仅包含该列表。'
 
 
 def generate_report_prompt(question: str, context, report_source: str, report_format="apa", total_words=1000):
@@ -34,7 +35,8 @@ def generate_report_prompt(question: str, context, report_source: str, report_fo
         reference_prompt = f'你必须在报告末尾将所有使用过的源 URL 作为参考文献列出，并确保不要添加重复的来源，每个来源只列一次引用。\n每个 URL 都应该是超链接形式：[url 网站](url)\n此外，在报告中无论何处引用相关网址，您都必须包含其超链接：\n\n例如：\n"""\n# 报告标题\n这是一个示例文本。([url 网站](url))\n"""'
     else:
         reference_prompt = f'你必须在报告末尾将所有使用过的源文档名称列为参考文献，并确保不要添加重复的来源，每个来源只列出一次引用。'
-    return f'信息：\n{context}\n\n使用上述信息，以详细报告的形式回答以下查询或任务："{question}"\n报告应该专注于回答查询，结构合理、信息丰富、深入全面，如果可能的话包含事实和数字，则至少包含 {total_words} 个字。\n\n您应尽可能使用所有相关和必要的信息尽可能长地撰写报告。\n您必须使用 markdown 语法撰写报告。\n使用公正和新闻化的语气。\n您必须根据给定的信息确定自己具体而有效的观点。不要得出笼统和无意义的结论。\n{reference_prompt} 您必须以 {report_format} 格式撰写报告。\n\n使用内联注释引用搜索结果。只引用最相关的、能准确回答查询的结果。将这些引用放在引用它们的句子或段落的末尾。\n请尽力而为，这对我的职业生涯非常重要。\n\n假设当前日期是 {datetime.now().strftime('%B %d, %Y')}'
+    _date = datetime.now().strftime('%B %d, %Y')
+    return f'信息：\n{context}\n\n使用上述信息，以详细报告的形式回答以下查询或任务："{question}"\n报告应该专注于回答查询，结构合理、信息丰富、深入全面，如果可能的话包含事实和数字，则至少包含 {total_words} 个字。\n\n您应尽可能使用所有相关和必要的信息尽可能长地撰写报告。\n您必须使用 markdown 语法撰写报告。\n使用公正和新闻化的语气。\n您必须根据给定的信息确定自己具体而有效的观点。不要得出笼统和无意义的结论。\n{reference_prompt} 您必须以 {report_format} 格式撰写报告。\n\n使用内联注释引用搜索结果。只引用最相关的、能准确回答查询的结果。将这些引用放在引用它们的句子或段落的末尾。\n请尽力而为，这对我的职业生涯非常重要。\n\n假设当前日期是 {_date}'
 
 
 def generate_resource_report_prompt(question, context, report_source: str, report_format="apa", total_words=1000):
@@ -136,6 +138,7 @@ def generate_subtopic_report_prompt(
     max_subsections=5,
     total_words=800
 ) -> str:
+    _date = datetime.now(timezone.utc).strftime('%B %d, %Y')
     return f"""上下文：
 {context}
 
@@ -161,7 +164,7 @@ def generate_subtopic_report_prompt(
 - 请勿使用上述任何标题或相关细节以避免重复。使用较小的 Markdown 标题（例如 H2 或 H3）来构建内容结构，避免使用最大的标题（H1），因为它将用于更大报告的标题。
 
 日期：
-如果需要，假设当前日期是 {datetime.now(timezone.utc).strftime('%B %d, %Y')}。
+如果需要，假设当前日期是 {_date}。
 
 重要提示：
 - 重点必须放在主要主题上！您必须省略与其无关的任何信息！
@@ -173,7 +176,8 @@ def generate_subtopic_report_prompt(
 
 
 def generate_report_introduction(question: str, research_summary: str = "") -> str:
-    return f'{research_summary}\n\n使用上述最新信息，准备一份关于主题"{question}"的详细报告前言。\n- 前言应简洁、结构良好、信息丰富且符合 markdown 语法。\n- 由于此前言将是一份较大报告的一部分，请不要包含通常出现在报告中的任何其他部分。\n- 前言前面应有一个 H1 标题，为整份报告提供一个合适的题目。\n- 必须在必要的地方使用 Markdown 语法 [url website](url)) 添加与句子相关的超链接。\n如果需要，假设当前日期为 {datetime.now(timezone.utc).strftime('%B %d, %Y')}。'
+    _date = datetime.now(timezone.utc).strftime('%B %d, %Y')
+    return f'{research_summary}\n\n使用上述最新信息，准备一份关于主题"{question}"的详细报告前言。\n- 前言应简洁、结构良好、信息丰富且符合 markdown 语法。\n- 由于此前言将是一份较大报告的一部分，请不要包含通常出现在报告中的任何其他部分。\n- 前言前面应有一个 H1 标题，为整份报告提供一个合适的题目。\n- 必须在必要的地方使用 Markdown 语法 [url website](url)) 添加与句子相关的超链接。\n如果需要，假设当前日期为 {_date}。'
 
 
 report_type_mapping = {
