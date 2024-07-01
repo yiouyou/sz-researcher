@@ -19,8 +19,8 @@ from .reviser import ReviserAgent
 
 
 class EditorAgent:
-    def __init__(self):
-        pass
+    def __init__(self, output_dir: str):
+        self.output_dir = output_dir
 
     def plan_research(self, research_state: dict):
         """
@@ -70,7 +70,7 @@ class EditorAgent:
                 ("human", _human),
             ]
         )
-        _llm = get_ollama_chat(os.environ["ollama_url"], _model=task.get("model"))
+        _llm = get_ollama_chat(os.environ["OLLAMA_BASE_URL"], _model=task.get("model"))
         chain = prompt | _llm | JsonOutputParser()
         print_agent_output(f"规划研究任务...", agent="EDITOR")
         response = chain.invoke({
@@ -79,7 +79,7 @@ class EditorAgent:
             "max_sections": max_sections,
         })
         print(f"--- 规划 ---\n{response}")
-        with open("规划.txt", "w", encoding="utf-8") as wf:
+        with open(os.path.join(self.output_dir, "规划.txt"), "w", encoding="utf-8") as wf:
             wf.write(str(response))
         plan = response
         return {
@@ -89,9 +89,9 @@ class EditorAgent:
         }
 
     async def run_parallel_research(self, research_state: dict):
-        research_agent = ResearchAgent()
-        reviewer_agent = ReviewerAgent()
-        reviser_agent = ReviserAgent()
+        research_agent = ResearchAgent(self.output_dir)
+        reviewer_agent = ReviewerAgent(self.output_dir)
+        reviser_agent = ReviserAgent(self.output_dir)
         queries = research_state.get("sections")
         title = research_state.get("title")
         workflow = StateGraph(DraftState)
@@ -114,7 +114,7 @@ class EditorAgent:
                         for query in queries]
         research_results = [result['draft'] for result in await asyncio.gather(*final_drafts)]
         print(f"--- 分步研究汇总 ---\n{research_results}")
-        with open("分步研究汇总.txt", "w", encoding="utf-8") as wf:
+        with open(os.path.join(self.output_dir, "分步研究汇总.txt"), "w", encoding="utf-8") as wf:
             wf.write(str(research_results))
         return {"research_data": research_results}
 

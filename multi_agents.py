@@ -4,6 +4,9 @@ import asyncio
 
 from multi_agents.chief import ChiefEditorAgent
 
+from dotenv import load_dotenv
+load_dotenv("./.env")
+
 
 def open_task(_topic: str):
     with open('./multi_agents/task.json', 'r', encoding='utf-8') as f:

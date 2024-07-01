@@ -1,12 +1,16 @@
-from colorama import Fore, Style
-from sz_researcher import SZResearcher
+import os
+import re
 
-from .utils.views import print_agent_output
+from colorama import Fore, Style
+
+from sz_researcher import SZResearcher
+from .utils.views import print_agent_output, text_2_fn
 
 
 class ResearchAgent:
-    def __init__(self):
-        pass
+    def __init__(self, output_dir: str):
+        self.output_dir = output_dir
+
 
     async def research(self, query: str, research_report: str = "研究",
                        parent_query: str = "", verbose=True, source="web"):
@@ -23,7 +27,7 @@ class ResearchAgent:
         # Write the report
         report = await researcher.write_report()
         print(f"--- 初研 ---\n{report}")
-        with open("初研.txt", "w", encoding="utf-8") as wf:
+        with open(os.path.join(self.output_dir, "初研.txt"), "w", encoding="utf-8") as wf:
             wf.write(str(report))
         return report
 
@@ -32,7 +36,7 @@ class ResearchAgent:
             report = await self.research(
                 parent_query=parent_query,
                 query=subtopic,
-                research_report="subtopic_report",
+                research_report="子课题",
                 verbose=verbose,
                 source=source
             )
@@ -62,7 +66,11 @@ class ResearchAgent:
             source=source
         )
         print(f"--- 深研草稿 ---\n{research_draft}")
-        with open("深研草稿.txt", "w", encoding="utf-8") as wf:
+        print("topic", topic)
+        print(str(topic))
+        _fn = text_2_fn(str(topic))
+        print("fn", _fn)
+        with open(os.path.join(self.output_dir, f"深研草稿_{_fn}.txt"), "w", encoding="utf-8") as wf:
             wf.write(str(research_draft))
         return {"draft": research_draft}
 

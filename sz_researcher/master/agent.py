@@ -81,7 +81,7 @@ class SZResearcher:
                 cost_callback=self.add_costs
             )
         if self.verbose:
-            await stream_output("logs", self.agent, self.websocket)
+            await stream_output("logs", f"\n🤖 {self.agent}", self.websocket)
         # If specified, the researcher will use the given urls as the context for the research.
         if self.source_urls:
             self.context = await self.__get_context_by_urls(self.source_urls)
@@ -93,7 +93,7 @@ class SZResearcher:
             self.context = await self.__get_context_by_search(self.query)
         time.sleep(2)
         if self.verbose:
-            await stream_output("logs", f"研究完成。\n💸 预估成本：${self.get_costs()}", self.websocket)
+            await stream_output("logs", f"\n💸 研究完成，预估成本：${self.get_costs()}", self.websocket)
         return self.context
 
     async def write_report(self, existing_headers: list = []):
@@ -104,7 +104,7 @@ class SZResearcher:
         """
         report = ""
         if self.verbose:
-            await stream_output("logs", f"✍️ 撰写研究摘要：{self.query}...", self.websocket)
+            await stream_output("logs", f"\n✍️ 撰写研究摘要：{self.query}...", self.websocket)
         if self.report_type == "自定义": # custom_report
             self.role = self.cfg.agent_role if self.cfg.agent_role else self.role
             report = await generate_report(
@@ -150,7 +150,7 @@ class SZResearcher:
         if self.verbose:
             await stream_output(
                 "logs",
-                f"🧠 将根据以下 url 进行研究：{new_search_urls}...",
+                f"\n🧠 根据以下 url 进行研究：{new_search_urls}...",
                 self.websocket
             )
         scraped_sites = scrape_urls(new_search_urls, self.cfg)
@@ -178,7 +178,7 @@ class SZResearcher:
         if self.verbose:
             await stream_output(
                 "logs",
-                f"🧠 将根据以下查询开展研究：{sub_queries}...",
+                f"\n🧠 根据以下'子课题'进行研究：{sub_queries}...",
                 self.websocket
             )
         # Using asyncio.gather to process the sub_queries asynchronously
@@ -199,7 +199,7 @@ class SZResearcher:
             scraped_data = await self.__scrape_data_by_query(sub_query)
         content = await self.__get_similar_content_by_query(sub_query, scraped_data)
         if content and self.verbose:
-            await stream_output("logs", f"📃 {content}", self.websocket)
+            await stream_output("logs", f"📃 {content[:100]}", self.websocket)
         elif self.verbose:
             await stream_output("logs", f"🤷 未找到相关内容 '{sub_query}'...", self.websocket)
         return content
@@ -217,7 +217,7 @@ class SZResearcher:
                 self.visited_urls.add(url)
                 new_urls.append(url)
                 if self.verbose:
-                    await stream_output("logs", f"✅ 添加了 url 以供研究：{url}", self.websocket)
+                    await stream_output("logs", f"✅ 添加研究 url：{url}", self.websocket)
         return new_urls
 
     async def __scrape_data_by_query(self, sub_query):

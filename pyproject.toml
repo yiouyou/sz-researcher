@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sz-researcher"
-version = "0.6.4"
+version = "0.7.4"
 description = "sz-researcher is an autonomous agent designed for comprehensive online research on a variety of tasks."
 authors = ["Zack Song <zhuosong@gmail.com>"]
 license = "MIT"

@@ -14,17 +14,17 @@ from .utils.llms import call_model, get_ollama_chat
 
 
 class WriterAgent:
-    def __init__(self):
-        pass
+    def __init__(self, output_dir: str):
+        self.output_dir = output_dir
 
     def get_headers(self, research_state: dict):
         return {
             "title": research_state.get("title"),
-            "date": "Date",
-            "introduction": "Introduction",
-            "table_of_contents": "Table of Contents",
-            "conclusion": "Conclusion",
-            "references": "References"
+            "date": "日期",
+            "introduction": "前言",
+            "table_of_contents": "目录",
+            "conclusion": "总结",
+            "references": "参考"
         }
 
     def write_sections(self, research_state: dict):
@@ -98,7 +98,7 @@ class WriterAgent:
                 ("human", _human),
             ]
         )
-        _llm = get_ollama_chat(os.environ["ollama_url"], _model=task.get("model"))
+        _llm = get_ollama_chat(os.environ["OLLAMA_BASE_URL"], _model=task.get("model"))
         chain = prompt | _llm | JsonOutputParser()
         if follow_guidelines:
             response = chain.invoke({
@@ -114,7 +114,7 @@ class WriterAgent:
                 "data": _data,
             })
         print(f"--- 撰写 ---\n{response}")
-        with open("撰写.txt", "w", encoding="utf-8") as wf:
+        with open(os.path.join(self.output_dir, "撰写.txt"), "w", encoding="utf-8") as wf:
             wf.write(str(response))
         return response
 
@@ -150,7 +150,7 @@ class WriterAgent:
                 ("human", _human),
             ]
         )
-        _llm = get_ollama_chat(os.environ["ollama_url"], _model=task.get("model"))
+        _llm = get_ollama_chat(os.environ["OLLAMA_BASE_URL"], _model=task.get("model"))
         chain = prompt | _llm | JsonOutputParser()
         response = chain.invoke({
             "guidelines": _guidelines,
@@ -159,7 +159,7 @@ class WriterAgent:
         return {"headers": response}
 
     def run(self, research_state: dict):
-        print_agent_output(f"根据研究数据撰写最终研究报告...", agent="WRITER")
+        print_agent_output(f"根据研究数据撰写最终报告...", agent="WRITER")
         research_layout_content = self.write_sections(research_state)
         if research_state.get("task").get("verbose"):
             print_agent_output(research_layout_content, agent="WRITER")

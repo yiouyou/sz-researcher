@@ -20,25 +20,25 @@ class ChiefEditorAgent:
 
     def init_research_team(self):
         # Initialize agents
-        writer_agent = WriterAgent()
-        editor_agent = EditorAgent()
-        research_agent = ResearchAgent()
+        research_agent = ResearchAgent(self.output_dir)
+        editor_agent = EditorAgent(self.output_dir)
+        writer_agent = WriterAgent(self.output_dir)
         publisher_agent = PublisherAgent(self.output_dir)
         # Define a Langchain StateGraph with the ResearchState
         workflow = StateGraph(ResearchState)
         # Add nodes for each agent
-        workflow.add_node("browser", research_agent.run_initial_research)
-        workflow.add_node("planner", editor_agent.plan_research)
-        workflow.add_node("researcher", editor_agent.run_parallel_research)
-        workflow.add_node("writer", writer_agent.run)
-        workflow.add_node("publisher", publisher_agent.run)
-        workflow.add_edge('browser', 'planner')
-        workflow.add_edge('planner', 'researcher')
-        workflow.add_edge('researcher', 'writer')
-        workflow.add_edge('writer', 'publisher')
+        workflow.add_node('初研', research_agent.run_initial_research)
+        workflow.add_node('规划', editor_agent.plan_research)
+        workflow.add_node('深研并行', editor_agent.run_parallel_research)
+        workflow.add_node('撰写', writer_agent.run)
+        workflow.add_node('发表', publisher_agent.run)
+        workflow.add_edge('初研', '规划')
+        workflow.add_edge('规划', '深研并行')
+        workflow.add_edge('深研并行', '撰写')
+        workflow.add_edge('撰写', '发表')
         # set up start and end nodes
-        workflow.set_entry_point("browser")
-        workflow.add_edge('publisher', END)
+        workflow.set_entry_point("初研")
+        workflow.add_edge('发表', END)
         return workflow
 
     async def run_research_task(self):

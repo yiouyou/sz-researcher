@@ -1,3 +1,5 @@
+import os
+
 from .utils.file_formats import (
     write_md_to_pdf,
     write_md_to_word,
@@ -13,7 +15,6 @@ class PublisherAgent:
     async def publish_research_report(self, research_state: dict, publish_formats: dict):
         layout = self.generate_layout(research_state)
         await self.write_report_by_formats(layout, publish_formats)
-
         return layout
 
     def generate_layout(self, research_state: dict):
@@ -55,7 +56,7 @@ class PublisherAgent:
         print_agent_output(output="根据检索到的数据发布最终研究报告...", agent="PUBLISHER")
         final_research_report = await self.publish_research_report(research_state, publish_formats)
         print(f"--- 终稿 ---\n{final_research_report}")
-        with open("终稿.txt", "w", encoding="utf-8") as wf:
+        with open(os.path.join(self.output_dir, "终稿.txt"), "w", encoding="utf-8") as wf:
             wf.write(str(final_research_report))
         return {"report": final_research_report}
 

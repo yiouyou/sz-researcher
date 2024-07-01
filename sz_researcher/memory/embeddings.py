@@ -20,9 +20,9 @@ class Memory:
                     openai_api_base=os.environ.get("OPENAI_BASE_URL", "http://localhost:1234/v1"), #default for lmstudio
                     check_embedding_ctx_length=False
                 ) #quick fix for lmstudio
-            case "openai":
-                from langchain_openai import OpenAIEmbeddings
-                _embeddings = OpenAIEmbeddings(model=OPENAI_EMBEDDING_MODEL)
+            # case "openai":
+            #     from langchain_openai import OpenAIEmbeddings
+            #     _embeddings = OpenAIEmbeddings(model=OPENAI_EMBEDDING_MODEL)
             # case "azureopenai":
             #     from langchain_openai import AzureOpenAIEmbeddings
             #     _embeddings = AzureOpenAIEmbeddings(deployment=os.environ["AZURE_EMBEDDING_MODEL"], chunk_size=16)

@@ -7,13 +7,13 @@ load_dotenv("../.env")
 from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
 
-from .utils.views import print_agent_output
+from .utils.views import print_agent_output, text_2_fn
 from .utils.llms import call_model, get_ollama_chat
 
 
 class ReviserAgent:
-    def __init__(self):
-        pass
+    def __init__(self, output_dir: str):
+        self.output_dir = output_dir
 
     def revise_draft(self, draft_state: dict):
         """
@@ -60,14 +60,15 @@ class ReviserAgent:
                 ("human", _human),
             ]
         )
-        _llm = get_ollama_chat(os.environ["ollama_url"], _model=task.get("model"))
+        _llm = get_ollama_chat(os.environ["OLLAMA_BASE_URL"], _model=task.get("model"))
         chain = prompt | _llm | JsonOutputParser()
         response = chain.invoke({
             "draft_report": draft_report,
             "review": review,
         })
         print(f"--- 深研修订 ---\n{response}")
-        with open("深研修订.txt", "w", encoding="utf-8") as wf:
+        _fn = text_2_fn(str(draft_report))
+        with open(os.path.join(self.output_dir, f"深研修订_{_fn}.txt"), "w", encoding="utf-8") as wf:
             wf.write(str(response))
         return response
 
