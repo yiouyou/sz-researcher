@@ -1,5 +1,5 @@
 from colorama import Fore, Style
-from gpt_researcher import GPTResearcher
+from sz_researcher import GPTResearcher
 
 from .utils.views import print_agent_output
 
