@@ -10,7 +10,7 @@ with open("requirements.txt", "r") as f:
 
 setup(
     name="sz-researcher",
-    version="0.0.8",
+    version="0.0.7",
     description="sz-researcher是一款为中文研究而设计的自主智能体，适用于多种任务。",
     package_dir={'sz_researcher': 'sz_researcher'},
     packages=find_packages(exclude=exclude_packages),
