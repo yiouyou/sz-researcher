@@ -1,0 +1,18 @@
+{
+    "model": "qwen:32b",
+    "query": "AI frees you.",
+    "source": "web",
+    "verbose": false,
+    "max_sections": 3,
+    "follow_guidelines": true,
+    "guidelines": [
+        "报告必须使用 APA 格式编写",
+        "每个子部分必须包含使用超链接的支持来源。如果某个子部分没有内容，删除该子部分或将其重写为上一节的一部分",
+        "报告必须用中文编写"
+    ],
+    "publish_formats": {
+        "markdown": true,
+        "pdf": true,
+        "docx": true
+    }
+}
