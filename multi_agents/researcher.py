@@ -1,5 +1,5 @@
 from colorama import Fore, Style
-from sz_researcher import GPTResearcher
+from sz_researcher import SZResearcher
 
 from .utils.views import print_agent_output
 
@@ -11,7 +11,7 @@ class ResearchAgent:
     async def research(self, query: str, research_report: str = "研究",
                        parent_query: str = "", verbose=True, source="web"):
         # Initialize the researcher
-        researcher = GPTResearcher(
+        researcher = SZResearcher(
             query=query,
             report_type=research_report,
             parent_query=parent_query,
