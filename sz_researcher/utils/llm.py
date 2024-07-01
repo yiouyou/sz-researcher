@@ -17,31 +17,31 @@ from .validators import Subtopics
 def get_llm(llm_provider, **kwargs):
     match llm_provider:
         case "openai":
-            from ..llm_provider import OpenAIProvider
+            from sz_researcher.llm_provider import OpenAIProvider
             llm_provider = OpenAIProvider
         # case "azureopenai":
-        #     from ..llm_provider import AzureOpenAIProvider
+        #     from sz_researcher.llm_provider import AzureOpenAIProvider
         #     llm_provider = AzureOpenAIProvider
         case "google":
-            from ..llm_provider import GoogleProvider
+            from sz_researcher.llm_provider import GoogleProvider
             llm_provider = GoogleProvider
         case "ollama":
-            from ..llm_provider import OllamaProvider
+            from sz_researcher.llm_provider import OllamaProvider
             llm_provider = OllamaProvider
         case "groq":
-            from ..llm_provider import GroqProvider
+            from sz_researcher.llm_provider import GroqProvider
             llm_provider = GroqProvider
         # case "together":
-        #     from ..llm_provider import TogetherProvider
+        #     from sz_researcher.llm_provider import TogetherProvider
         #     llm_provider = TogetherProvider
         case "huggingface":
-            from ..llm_provider import HugginFaceProvider
+            from sz_researcher.llm_provider import HugginFaceProvider
             llm_provider = HugginFaceProvider
         case "mistral":
-            from ..llm_provider import MistralProvider
+            from sz_researcher.llm_provider import MistralProvider
             llm_provider = MistralProvider
         case "anthropic":
-            from ..llm_provider import AnthropicProvider
+            from sz_researcher.llm_provider import AnthropicProvider
             llm_provider = AnthropicProvider
         # Generic case for all other providers supported by Langchain
         # case _:

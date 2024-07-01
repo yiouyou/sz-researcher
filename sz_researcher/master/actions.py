@@ -61,6 +61,7 @@ async def choose_agent(query, cfg, parent_query=None, cost_callback: callable = 
         agent_role_prompt: Agent role prompt
     """
     query = f"{parent_query} - {query}" if parent_query else f"{query}"
+    response = ""
     try:
         response = await create_chat_completion(
             model=cfg.smart_llm_model,
